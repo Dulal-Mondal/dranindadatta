@@ -1,0 +1,6 @@
+import api from './api';
+
+export const getVideos = (params) => api.get('/videos', { params });
+export const createVideo = (data) => api.post('/videos', data);
+export const updateVideo = (id, data) => api.put(`/videos/${id}`, data);
+export const deleteVideo = (id) => api.delete(`/videos/${id}`);
