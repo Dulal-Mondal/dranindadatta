@@ -108,9 +108,248 @@
 
 
 
+// import { useEffect, useRef, useState } from 'react';
+// import { useParams, useNavigate } from 'react-router-dom';
+// import { FiMic, FiMicOff, FiVideo, FiVideoOff, FiPhoneOff } from 'react-icons/fi';
+
+// const DoctorVideoCall = () => {
+//     const { roomId } = useParams();
+//     const navigate = useNavigate();
+
+//     const localVideoRef = useRef(null);
+//     const remoteVideoRef = useRef(null);
+//     const peerRef = useRef(null);
+//     const localStreamRef = useRef(null);
+//     const callRef = useRef(null);
+//     const ringIntervalRef = useRef(null);
+
+//     const [callStatus, setCallStatus] = useState('calling');
+//     const [isMuted, setIsMuted] = useState(false);
+//     const [isVideoOff, setIsVideoOff] = useState(false);
+//     const [callDuration, setCallDuration] = useState(0);
+
+//     const playRing = () => {
+//         try {
+//             const ctx = new (window.AudioContext || window.webkitAudioContext)();
+//             const playBeep = () => {
+//                 const o1 = ctx.createOscillator();
+//                 const o2 = ctx.createOscillator();
+//                 const g = ctx.createGain();
+//                 o1.connect(g); o2.connect(g);
+//                 g.connect(ctx.destination);
+//                 o1.frequency.value = 480;
+//                 o2.frequency.value = 620;
+//                 g.gain.value = 0.2;
+//                 o1.start(); o2.start();
+//                 setTimeout(() => { o1.stop(); o2.stop(); }, 600);
+//             };
+//             playBeep();
+//             ringIntervalRef.current = setInterval(playBeep, 2000);
+//         } catch (e) { console.log('Audio error:', e); }
+//     };
+
+//     const stopRing = () => clearInterval(ringIntervalRef.current);
+
+//     useEffect(() => {
+//         playRing();
+//         startCall();
+//         return () => { stopRing(); cleanup(); };
+//     }, []);
+
+//     useEffect(() => {
+//         let timer;
+//         if (callStatus === 'connected') {
+//             stopRing();
+//             timer = setInterval(() => setCallDuration((p) => p + 1), 1000);
+//         }
+//         return () => clearInterval(timer);
+//     }, [callStatus]);
+
+//     const formatDuration = (s) => {
+//         const m = Math.floor(s / 60).toString().padStart(2, '0');
+//         const sec = (s % 60).toString().padStart(2, '0');
+//         return m + ':' + sec;
+//     };
+
+//     const startCall = async () => {
+//         try {
+//             const { Peer } = await import('peerjs');
+//             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+//             localStreamRef.current = stream;
+//             if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+
+//             const peer = new Peer('doctor-' + roomId);
+//             peerRef.current = peer;
+
+//             peer.on('open', () => {
+//                 const call = peer.call('patient-' + roomId, stream);
+//                 callRef.current = call;
+//                 call.on('stream', (remoteStream) => {
+//                     if (remoteVideoRef.current) remoteVideoRef.current.srcObject = remoteStream;
+//                     setCallStatus('connected');
+//                 });
+//                 call.on('error', (err) => console.error('Call error:', err));
+//             });
+
+//             peer.on('error', (err) => console.error('Peer error:', err));
+//         } catch (err) {
+//             console.error('Media error:', err);
+//         }
+//     };
+
+//     const cleanup = () => {
+//         localStreamRef.current?.getTracks().forEach((t) => t.stop());
+//         callRef.current?.close();
+//         peerRef.current?.destroy();
+//     };
+
+//     const endCall = () => {
+//         stopRing();
+//         cleanup();
+//         navigate('/doctor/appointments');
+//     };
+
+//     const toggleMute = () => {
+//         const track = localStreamRef.current?.getAudioTracks()[0];
+//         if (track) { track.enabled = !track.enabled; setIsMuted(!track.enabled); }
+//     };
+
+//     const toggleVideo = () => {
+//         const track = localStreamRef.current?.getVideoTracks()[0];
+//         if (track) { track.enabled = !track.enabled; setIsVideoOff(!track.enabled); }
+//     };
+
+//     return (
+//         <div style={{
+//             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+//             background: '#0f172a', display: 'flex', flexDirection: 'column',
+//             zIndex: 99999, overflow: 'hidden',
+//         }}>
+
+//             {/* Remote video */}
+//             <div style={{ position: 'relative', flex: 1, overflow: 'hidden', background: '#1e293b' }}>
+//                 <video
+//                     ref={remoteVideoRef}
+//                     autoPlay playsInline
+//                     style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+//                 />
+
+//                 {/* Calling overlay */}
+//                 {callStatus === 'calling' && (
+//                     <div style={{
+//                         position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+//                         alignItems: 'center', justifyContent: 'center', color: 'white',
+//                     }}>
+//                         <div style={{
+//                             width: 90, height: 90, borderRadius: '50%', background: '#0ea5e9',
+//                             display: 'flex', alignItems: 'center', justifyContent: 'center',
+//                             fontSize: 36, marginBottom: 20,
+//                             animation: 'pulse 1.5s infinite',
+//                         }}>📞</div>
+//                         <p style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Calling patient...</p>
+//                         <p style={{ fontSize: 13, color: '#94a3b8' }}>Waiting for patient to join</p>
+//                     </div>
+//                 )}
+
+//                 {/* Duration */}
+//                 {callStatus === 'connected' && (
+//                     <div style={{
+//                         position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)',
+//                         background: 'rgba(0,0,0,0.6)', color: 'white',
+//                         padding: '5px 18px', borderRadius: 20, fontSize: 14,
+//                         display: 'flex', alignItems: 'center', gap: 6,
+//                     }}>
+//                         <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
+//                         {formatDuration(callDuration)}
+//                     </div>
+//                 )}
+
+//                 {/* Local PIP */}
+//                 <div style={{
+//                     position: 'absolute', bottom: 16, right: 16,
+//                     width: 120, height: 90, borderRadius: 10, overflow: 'hidden',
+//                     border: '2px solid rgba(255,255,255,0.7)',
+//                     boxShadow: '0 4px 16px rgba(0,0,0,0.5)',
+//                 }}>
+//                     <video
+//                         ref={localVideoRef}
+//                         autoPlay playsInline muted
+//                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+//                     />
+//                     {isVideoOff && (
+//                         <div style={{
+//                             position: 'absolute', inset: 0, background: '#1e293b',
+//                             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28,
+//                         }}>👤</div>
+//                     )}
+//                 </div>
+//             </div>
+
+//             {/* Controls — always visible */}
+//             <div style={{
+//                 position: 'relative', zIndex: 100,
+//                 background: '#1e293b',
+//                 borderTop: '1px solid #334155',
+//                 padding: '16px 24px 10px',
+//                 flexShrink: 0,
+//             }}>
+//                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
+
+//                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+//                         <button onClick={toggleMute} style={{
+//                             width: 52, height: 52, borderRadius: '50%',
+//                             background: isMuted ? '#ef4444' : '#334155',
+//                             border: 'none', cursor: 'pointer',
+//                             display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
+//                         }}>
+//                             {isMuted ? <FiMicOff size={22} /> : <FiMic size={22} />}
+//                         </button>
+//                         <span style={{ color: '#94a3b8', fontSize: 11 }}>{isMuted ? 'Unmute' : 'Mute'}</span>
+//                     </div>
+
+//                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+//                         <button onClick={endCall} style={{
+//                             width: 64, height: 64, borderRadius: '50%',
+//                             background: '#dc2626', border: 'none', cursor: 'pointer',
+//                             display: 'flex', alignItems: 'center', justifyContent: 'center',
+//                             color: 'white', boxShadow: '0 4px 16px rgba(220,38,38,0.5)',
+//                         }}>
+//                             <FiPhoneOff size={26} />
+//                         </button>
+//                         <span style={{ color: '#94a3b8', fontSize: 11 }}>End Call</span>
+//                     </div>
+
+//                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+//                         <button onClick={toggleVideo} style={{
+//                             width: 52, height: 52, borderRadius: '50%',
+//                             background: isVideoOff ? '#ef4444' : '#334155',
+//                             border: 'none', cursor: 'pointer',
+//                             display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
+//                         }}>
+//                             {isVideoOff ? <FiVideoOff size={22} /> : <FiVideo size={22} />}
+//                         </button>
+//                         <span style={{ color: '#94a3b8', fontSize: 11 }}>{isVideoOff ? 'Start Video' : 'Stop Video'}</span>
+//                     </div>
+//                 </div>
+//             </div>
+
+//             <style>{`
+//         @keyframes pulse {
+//           0%, 100% { box-shadow: 0 0 0 12px rgba(14,165,233,0.2); }
+//           50% { box-shadow: 0 0 0 22px rgba(14,165,233,0.05); }
+//         }
+//       `}</style>
+//         </div>
+//     );
+// };
+
+// export default DoctorVideoCall;
+
+
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FiMic, FiMicOff, FiVideo, FiVideoOff, FiPhoneOff } from 'react-icons/fi';
+import ICE_SERVERS from '../../utils/iceServers';
 
 const DoctorVideoCall = () => {
     const { roomId } = useParams();
@@ -135,17 +374,15 @@ const DoctorVideoCall = () => {
                 const o1 = ctx.createOscillator();
                 const o2 = ctx.createOscillator();
                 const g = ctx.createGain();
-                o1.connect(g); o2.connect(g);
-                g.connect(ctx.destination);
-                o1.frequency.value = 480;
-                o2.frequency.value = 620;
+                o1.connect(g); o2.connect(g); g.connect(ctx.destination);
+                o1.frequency.value = 480; o2.frequency.value = 620;
                 g.gain.value = 0.2;
                 o1.start(); o2.start();
                 setTimeout(() => { o1.stop(); o2.stop(); }, 600);
             };
             playBeep();
             ringIntervalRef.current = setInterval(playBeep, 2000);
-        } catch (e) { console.log('Audio error:', e); }
+        } catch (e) { }
     };
 
     const stopRing = () => clearInterval(ringIntervalRef.current);
@@ -178,7 +415,9 @@ const DoctorVideoCall = () => {
             localStreamRef.current = stream;
             if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
-            const peer = new Peer('doctor-' + roomId);
+            const peer = new Peer('doctor-' + roomId, {
+                config: { iceServers: ICE_SERVERS },
+            });
             peerRef.current = peer;
 
             peer.on('open', () => {
@@ -203,11 +442,7 @@ const DoctorVideoCall = () => {
         peerRef.current?.destroy();
     };
 
-    const endCall = () => {
-        stopRing();
-        cleanup();
-        navigate('/doctor/appointments');
-    };
+    const endCall = () => { stopRing(); cleanup(); navigate('/doctor/appointments'); };
 
     const toggleMute = () => {
         const track = localStreamRef.current?.getAudioTracks()[0];
@@ -220,125 +455,59 @@ const DoctorVideoCall = () => {
     };
 
     return (
-        <div style={{
-            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            background: '#0f172a', display: 'flex', flexDirection: 'column',
-            zIndex: 99999, overflow: 'hidden',
-        }}>
-
-            {/* Remote video */}
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: '#0f172a', display: 'flex', flexDirection: 'column', zIndex: 99999, overflow: 'hidden' }}>
             <div style={{ position: 'relative', flex: 1, overflow: 'hidden', background: '#1e293b' }}>
-                <video
-                    ref={remoteVideoRef}
-                    autoPlay playsInline
-                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+                <video ref={remoteVideoRef} autoPlay playsInline
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
 
-                {/* Calling overlay */}
                 {callStatus === 'calling' && (
-                    <div style={{
-                        position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', justifyContent: 'center', color: 'white',
-                    }}>
-                        <div style={{
-                            width: 90, height: 90, borderRadius: '50%', background: '#0ea5e9',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: 36, marginBottom: 20,
-                            animation: 'pulse 1.5s infinite',
-                        }}>📞</div>
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                        <div style={{ width: 90, height: 90, borderRadius: '50%', background: '#0ea5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36, marginBottom: 20, animation: 'pulse 1.5s infinite' }}>📞</div>
                         <p style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Calling patient...</p>
                         <p style={{ fontSize: 13, color: '#94a3b8' }}>Waiting for patient to join</p>
                     </div>
                 )}
 
-                {/* Duration */}
                 {callStatus === 'connected' && (
-                    <div style={{
-                        position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)',
-                        background: 'rgba(0,0,0,0.6)', color: 'white',
-                        padding: '5px 18px', borderRadius: 20, fontSize: 14,
-                        display: 'flex', alignItems: 'center', gap: 6,
-                    }}>
+                    <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '5px 18px', borderRadius: 20, fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
                         {formatDuration(callDuration)}
                     </div>
                 )}
 
-                {/* Local PIP */}
-                <div style={{
-                    position: 'absolute', bottom: 16, right: 16,
-                    width: 120, height: 90, borderRadius: 10, overflow: 'hidden',
-                    border: '2px solid rgba(255,255,255,0.7)',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.5)',
-                }}>
-                    <video
-                        ref={localVideoRef}
-                        autoPlay playsInline muted
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                <div style={{ position: 'absolute', bottom: 16, right: 16, width: 120, height: 90, borderRadius: 10, overflow: 'hidden', border: '2px solid rgba(255,255,255,0.7)', boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}>
+                    <video ref={localVideoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     {isVideoOff && (
-                        <div style={{
-                            position: 'absolute', inset: 0, background: '#1e293b',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28,
-                        }}>👤</div>
+                        <div style={{ position: 'absolute', inset: 0, background: '#1e293b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>👤</div>
                     )}
                 </div>
             </div>
 
-            {/* Controls — always visible */}
-            <div style={{
-                position: 'relative', zIndex: 100,
-                background: '#1e293b',
-                borderTop: '1px solid #334155',
-                padding: '16px 24px 10px',
-                flexShrink: 0,
-            }}>
+            <div style={{ position: 'relative', zIndex: 100, background: '#1e293b', borderTop: '1px solid #334155', padding: '16px 24px 10px', flexShrink: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
-
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                        <button onClick={toggleMute} style={{
-                            width: 52, height: 52, borderRadius: '50%',
-                            background: isMuted ? '#ef4444' : '#334155',
-                            border: 'none', cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
-                        }}>
+                        <button onClick={toggleMute} style={{ width: 52, height: 52, borderRadius: '50%', background: isMuted ? '#ef4444' : '#334155', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
                             {isMuted ? <FiMicOff size={22} /> : <FiMic size={22} />}
                         </button>
                         <span style={{ color: '#94a3b8', fontSize: 11 }}>{isMuted ? 'Unmute' : 'Mute'}</span>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                        <button onClick={endCall} style={{
-                            width: 64, height: 64, borderRadius: '50%',
-                            background: '#dc2626', border: 'none', cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            color: 'white', boxShadow: '0 4px 16px rgba(220,38,38,0.5)',
-                        }}>
+                        <button onClick={endCall} style={{ width: 64, height: 64, borderRadius: '50%', background: '#dc2626', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: '0 4px 16px rgba(220,38,38,0.5)' }}>
                             <FiPhoneOff size={26} />
                         </button>
                         <span style={{ color: '#94a3b8', fontSize: 11 }}>End Call</span>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                        <button onClick={toggleVideo} style={{
-                            width: 52, height: 52, borderRadius: '50%',
-                            background: isVideoOff ? '#ef4444' : '#334155',
-                            border: 'none', cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white',
-                        }}>
+                        <button onClick={toggleVideo} style={{ width: 52, height: 52, borderRadius: '50%', background: isVideoOff ? '#ef4444' : '#334155', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
                             {isVideoOff ? <FiVideoOff size={22} /> : <FiVideo size={22} />}
                         </button>
                         <span style={{ color: '#94a3b8', fontSize: 11 }}>{isVideoOff ? 'Start Video' : 'Stop Video'}</span>
                     </div>
                 </div>
             </div>
-
-            <style>{`
-        @keyframes pulse {
-          0%, 100% { box-shadow: 0 0 0 12px rgba(14,165,233,0.2); }
-          50% { box-shadow: 0 0 0 22px rgba(14,165,233,0.05); }
-        }
-      `}</style>
+            <style>{`@keyframes pulse{0%,100%{box-shadow:0 0 0 12px rgba(14,165,233,0.2)}50%{box-shadow:0 0 0 22px rgba(14,165,233,0.05)}}`}</style>
         </div>
     );
 };
