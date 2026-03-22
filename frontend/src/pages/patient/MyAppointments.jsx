@@ -8,12 +8,13 @@ import { formatDate } from '../../utils/formatDate';
 import { APPOINTMENT_STATUS } from '../../utils/constants';
 import toast from 'react-hot-toast';
 import { FiCalendar, FiVideo, FiMessageSquare, FiX, FiClock } from 'react-icons/fi';
-
+import usePageTitle from '../../hooks/usePageTitle';
 const MyAppointments = () => {
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
 
+    usePageTitle('My Appointments');
     useEffect(() => {
         fetchAppointments();
     }, []);

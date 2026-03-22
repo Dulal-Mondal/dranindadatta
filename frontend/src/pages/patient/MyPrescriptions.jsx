@@ -171,12 +171,13 @@ import { getMyPrescriptions } from '../../services/prescriptionService';
 import { formatDate } from '../../utils/formatDate';
 import toast from 'react-hot-toast';
 import { FiFileText, FiDownload, FiCalendar, FiUser } from 'react-icons/fi';
-
+import usePageTitle from '../../hooks/usePageTitle';
 const MyPrescriptions = () => {
     const [prescriptions, setPrescriptions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selected, setSelected] = useState(null);
 
+    usePageTitle('My Prescriptions');
     useEffect(() => {
         fetchPrescriptions();
     }, []);

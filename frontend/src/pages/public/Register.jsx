@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { FiUser, FiMail, FiLock, FiPhone, FiEye, FiEyeOff } from 'react-icons/fi';
-
+import usePageTitle from '../../hooks/usePageTitle';
 const specializations = [
     'Cardiology', 'Dermatology', 'Neurology',
     'Orthopedics', 'Pediatrics', 'Psychiatry',
@@ -12,6 +12,8 @@ const specializations = [
 ];
 
 const Register = () => {
+
+    usePageTitle('Register');
     const { register } = useAuth();
     const navigate = useNavigate();
 

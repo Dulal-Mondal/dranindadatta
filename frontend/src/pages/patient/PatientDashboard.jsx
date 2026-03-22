@@ -9,6 +9,7 @@ import { getMyAppointments } from '../../services/appointmentService';
 import { getMyPrescriptions } from '../../services/prescriptionService';
 import { formatDate } from '../../utils/formatDate';
 import { APPOINTMENT_STATUS } from '../../utils/constants';
+import usePageTitle from '../../hooks/usePageTitle';
 import {
     FiCalendar, FiFileText, FiCheckCircle,
     FiClock, FiVideo, FiMessageSquare, FiArrowRight,
@@ -20,7 +21,7 @@ const PatientDashboard = () => {
     const [appointments, setAppointments] = useState([]);
     const [prescriptions, setPrescriptions] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    usePageTitle('Patient Dashboard');
     useEffect(() => {
         fetchAll();
     }, []);

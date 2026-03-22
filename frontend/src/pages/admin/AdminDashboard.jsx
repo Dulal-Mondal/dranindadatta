@@ -5,11 +5,11 @@ import Loader from '../../components/common/Loader';
 import { getAdminStats } from '../../services/adminService';
 import { formatBDT } from '../../utils/formatCurrency';
 import { FiUsers, FiCalendar, FiDollarSign, FiUserCheck, FiClock, FiArrowRight } from 'react-icons/fi';
-
+import usePageTitle from '../../hooks/usePageTitle';
 const AdminDashboard = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    usePageTitle('Admin Dashboard');
     useEffect(() => {
         fetchStats();
     }, []);

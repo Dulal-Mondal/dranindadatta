@@ -9,13 +9,13 @@ import { getDoctorAppointments } from '../../services/appointmentService';
 import { formatDate } from '../../utils/formatDate';
 import { APPOINTMENT_STATUS } from '../../utils/constants';
 import { FiCalendar, FiCheckCircle, FiClock, FiUsers, FiArrowRight, FiVideo, FiMessageSquare } from 'react-icons/fi';
-
+import usePageTitle from '../../hooks/usePageTitle';
 const DoctorDashboard = () => {
     const { user } = useAuth();
     const [stats, setStats] = useState(null);
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    usePageTitle('Doctor Dashboard');
     useEffect(() => {
         fetchAll();
     }, []);

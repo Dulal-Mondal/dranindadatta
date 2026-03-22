@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const Login = () => {
+    usePageTitle('Login');
     const { login } = useAuth();
     const navigate = useNavigate();
 

@@ -13,7 +13,7 @@ import {
     FiArrowRight, FiCheckCircle,
     FiVideo, FiMessageSquare, FiFileText, FiShield,
 } from 'react-icons/fi';
-
+import usePageTitle from '../../hooks/usePageTitle';
 // ── Hero Slider ──────────────────────────────────────────
 const HeroSlider = ({ sliders }) => {
     const [current, setCurrent] = useState(0);
@@ -155,7 +155,7 @@ const Home = () => {
     const [blogs, setBlogs] = useState([]);
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    usePageTitle('Home');
     useEffect(() => {
         fetchAll();
     }, []);

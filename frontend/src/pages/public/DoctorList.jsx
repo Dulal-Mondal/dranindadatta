@@ -7,7 +7,7 @@ import { getAllDoctors } from '../../services/doctorService';
 import { SPECIALIZATIONS } from '../../utils/constants';
 import { formatBDT } from '../../utils/formatCurrency';
 import { FiSearch, FiStar, FiClock, FiFilter } from 'react-icons/fi';
-
+import usePageTitle from '../../hooks/usePageTitle';
 const DoctorList = () => {
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,6 +15,8 @@ const DoctorList = () => {
     const [specialization, setSpecialization] = useState('');
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
+
+    usePageTitle('Find Doctors');
 
     useEffect(() => {
         fetchDoctors();
