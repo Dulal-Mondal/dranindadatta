@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /doctors
+Allow: /blogs
+Allow: /videos
+
+Disallow: /admin/
+Disallow: /patient/
+Disallow: /doctor/
+Disallow: /payment/
+
+Sitemap: https://dranindadatta.vercel.app/sitemap.xml
