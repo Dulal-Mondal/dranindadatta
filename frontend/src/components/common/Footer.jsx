@@ -26,7 +26,7 @@ const Footer = () => {
                             Quality healthcare at your fingertips. Connect with top doctors anytime, anywhere.
                         </p>
                         <div className="flex gap-2 flex-wrap">
-                            <a href="#" target="_blank" rel="noreferrer" title="Facebook"
+                            <a href="https://www.facebook.com/profile.php?id=61580455479102#" target="_blank" rel="noreferrer" title="Facebook"
                                 className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-[#1877F2] transition">
                                 <FiFacebook size={16} />
                             </a>
