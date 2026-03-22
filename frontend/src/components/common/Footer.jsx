@@ -42,7 +42,7 @@ const Footer = () => {
                                 className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-[#FF0000] transition">
                                 <FiYoutube size={16} />
                             </a>
-                            <a href="#" target="_blank" rel="noreferrer" title="TikTok"
+                            <a href="https://www.tiktok.com/@doctoranindadatta?_r=1&_t=ZS-94qu3wmLCKe" target="_blank" rel="noreferrer" title="TikTok"
                                 className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-[#010101] hover:border hover:border-gray-600 transition">
                                 <TikTokIcon size={16} />
                             </a>
