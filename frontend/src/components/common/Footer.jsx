@@ -30,11 +30,11 @@ const Footer = () => {
                                 className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-[#1877F2] transition">
                                 <FiFacebook size={16} />
                             </a>
-                            <a href="#" target="_blank" rel="noreferrer" title="Twitter"
+                            <a href="https://x.com/aninda50359" target="_blank" rel="noreferrer" title="Twitter"
                                 className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-[#1DA1F2] transition">
                                 <FiTwitter size={16} />
                             </a>
-                            <a href="#" target="_blank" rel="noreferrer" title="Instagram"
+                            <a href="https://www.instagram.com/dr_aninda_datta" target="_blank" rel="noreferrer" title="Instagram"
                                 className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-[#E1306C] transition">
                                 <FiInstagram size={16} />
                             </a>
