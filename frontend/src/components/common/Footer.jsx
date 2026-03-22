@@ -38,7 +38,7 @@ const Footer = () => {
                                 className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-[#E1306C] transition">
                                 <FiInstagram size={16} />
                             </a>
-                            <a href="#" target="_blank" rel="noreferrer" title="YouTube"
+                            <a href="https://www.youtube.com/@dranindadatta" target="_blank" rel="noreferrer" title="YouTube"
                                 className="w-9 h-9 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-[#FF0000] transition">
                                 <FiYoutube size={16} />
                             </a>
