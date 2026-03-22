@@ -147,20 +147,16 @@
 
 
 
-// ✅ FIX: dotenv must be configured before ANY other require
-// so that process.env values are available in all modules (cloudinary, db, etc.)
 const dotenv = require('dotenv');
 dotenv.config();
 
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-const path = require('path');
 const connectDB = require('./config/db');
 const errorMiddleware = require('./middleware/error.middleware');
 const { initSocket } = require('./config/socket');
 
-// routes
 const authRoutes = require('./routes/auth.routes');
 const doctorRoutes = require('./routes/doctor.routes');
 const patientRoutes = require('./routes/patient.routes');
@@ -177,7 +173,6 @@ connectDB();
 
 const app = express();
 const server = http.createServer(app);
-
 const io = initSocket(server);
 
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
@@ -189,7 +184,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// routes
 app.use('/api/auth', authRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/patients', patientRoutes);
@@ -201,25 +195,13 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/videos', videoRoutes);
-app.use('/api/settings', require('./routes/settings.routes'));
 
 app.get('/', (req, res) => res.send('Telemedicine API running'));
 
-// socket handlers
 require('./socket/chat.socket')(io);
 require('./socket/videoCall.socket')(io);
 
-// global error handler
 app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-// Production এ frontend serve করবে
-if (process.env.NODE_ENV === 'production') {
-    const path = require('path');
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
-    app.get('/{*path}', (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
-    });
-}
