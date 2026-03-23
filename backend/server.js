@@ -145,12 +145,82 @@
 // }
 
 
+// const dotenv = require('dotenv');
+// dotenv.config();
+
+// const express = require('express');
+// const http = require('http');
+// const cors = require('cors');
+// const connectDB = require('./config/db');
+// const errorMiddleware = require('./middleware/error.middleware');
+// const { initSocket } = require('./config/socket');
+
+// const authRoutes = require('./routes/auth.routes');
+// const doctorRoutes = require('./routes/doctor.routes');
+// const patientRoutes = require('./routes/patient.routes');
+// const appointmentRoutes = require('./routes/appointment.routes');
+// const prescriptionRoutes = require('./routes/prescription.routes');
+// const messageRoutes = require('./routes/message.routes');
+// const paymentRoutes = require('./routes/payment.routes');
+// const adminRoutes = require('./routes/admin.routes');
+// const uploadRoutes = require('./routes/upload.routes');
+// const blogRoutes = require('./routes/blog.routes');
+// const videoRoutes = require('./routes/video.routes');
+
+// connectDB();
+
+// const app = express();
+// const server = http.createServer(app);
+// const io = initSocket(server);
+
+// // app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+
+// app.use(cors({
+//     origin: process.env.CLIENT_URL || 'http://localhost:5173',
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization'], // ← এটা যোগ করুন
+// }));
+
+// app.options('*', cors()); // ← এটা যোগ করুন
+
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
+// app.use((req, res, next) => {
+//     req.io = io;
+//     next();
+// });
+
+// app.use('/api/auth', authRoutes);
+// app.use('/api/doctors', doctorRoutes);
+// app.use('/api/patients', patientRoutes);
+// app.use('/api/appointments', appointmentRoutes);
+// app.use('/api/prescriptions', prescriptionRoutes);
+// app.use('/api/messages', messageRoutes);
+// app.use('/api/payments', paymentRoutes);
+// app.use('/api/admin', adminRoutes);
+// app.use('/api/upload', uploadRoutes);
+// app.use('/api/blogs', blogRoutes);
+// app.use('/api/videos', videoRoutes);
+
+// app.get('/', (req, res) => res.send('Telemedicine API running'));
+
+// require('./socket/chat.socket')(io);
+// require('./socket/videoCall.socket')(io);
+
+// app.use(errorMiddleware);
+
+// const PORT = process.env.PORT || 5000;
+// server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+
 const dotenv = require('dotenv');
 dotenv.config();
 
 const express = require('express');
 const http = require('http');
-const cors = require('cors');
 const connectDB = require('./config/db');
 const errorMiddleware = require('./middleware/error.middleware');
 const { initSocket } = require('./config/socket');
@@ -180,21 +250,22 @@ const allowedOrigins = [
     'http://localhost:5173',
 ];
 
-const corsOptions = {
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-};
+// ✅ Manual CORS header — cors package বাদ দিয়ে
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-app.options('*', cors(corsOptions)); // ✅ সবার আগে
-app.use(cors(corsOptions));
+    // Preflight
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
