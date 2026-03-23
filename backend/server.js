@@ -173,8 +173,6 @@ const app = express();
 const server = http.createServer(app);
 const io = initSocket(server);
 
-// app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
-
 const allowedOrigins = [
     'https://www.dranindadatta.com',
     'https://dranindadatta.com',
@@ -182,7 +180,7 @@ const allowedOrigins = [
     'http://localhost:5173',
 ];
 
-app.use(cors({
+const corsOptions = {
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
@@ -193,9 +191,10 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
 
-app.options('*', cors());
+app.options('*', cors(corsOptions)); // ✅ সবার আগে
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
