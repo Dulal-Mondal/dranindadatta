@@ -8,11 +8,10 @@ import axios from 'axios';
 
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'https://api.dranindadatta.com',
+    baseURL: import.meta.env.VITE_API_URL || 'https://api.dranindadatta.com/api', // ✅ /api যোগ করুন
     timeout: 10000,
-    withCredentials: true // cookie/session হলে লাগবে
+    withCredentials: true
 });
-
 // request interceptor — token auto attach
 api.interceptors.request.use(
     (config) => {
