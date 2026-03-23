@@ -173,7 +173,13 @@ const app = express();
 const server = http.createServer(app);
 const io = initSocket(server);
 
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+// app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+
+app.use(cors({
+    origin: process.env.CLIENT_URL || 'http://localhost:5173', // Frontend domain
+    credentials: true, // JWT / cookie use হলে অবশ্যই true
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
