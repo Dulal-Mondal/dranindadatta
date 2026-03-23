@@ -175,14 +175,27 @@ const io = initSocket(server);
 
 // app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
 
+const allowedOrigins = [
+    'https://www.dranindadatta.com',
+    'https://dranindadatta.com',
+    'https://dranindadatta.vercel.app',
+    'http://localhost:5173',
+];
+
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'], // ← এটা যোগ করুন
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-app.options('*', cors()); // ← এটা যোগ করুন
+app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
