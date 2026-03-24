@@ -270,8 +270,8 @@ const Navbar = () => {
 
                     <Link to="/" className="flex items-center gap-2">
                         <div className="w-9 h-9 bg-primary-500 rounded-xl flex items-center justify-center">
-
-                        </div><img src="" alt="" />
+                            <img src="logo1.png" alt="logo" />
+                        </div>
                         {/* <span className="text-xl font-bold text-gray-800">
                             Dr.<span className="text-primary-500">AnindaDatta</span>
                         </span> */}
