@@ -269,10 +269,10 @@ const Navbar = () => {
                 <div className="flex items-center justify-between h-16">
 
                     <Link to="/" className="flex items-center gap-2">
-                        <div className="w-9 h-9 bg-primary-500 rounded-xl flex items-center justify-center">
+                        {/* <div className="w-9 h-9 bg-primary-500 rounded-xl flex items-center justify-center">
 
-                        </div>
-                        <img src="logo1.png" alt="logo" />
+                        </div> */}
+                        <img src="/logo1.png" alt="logo" className='w-10 h-10' />
                     </Link>
 
                     <div className="hidden md:flex items-center gap-1">
