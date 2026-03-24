@@ -18,9 +18,9 @@ const Footer = () => {
                     <div className="col-span-1">
                         <div className="flex items-center gap-2 mb-4">
                             <div className="w-9 h-9 bg-primary-500 rounded-xl flex items-center justify-center">
-                                <span className="text-white">🏥</span>
+                                <img src="/frontend/public/logo1.png" alt="logo" />
                             </div>
-                            <span className="text-xl font-bold text-white">Dr.AnindaDatta</span>
+
                         </div>
                         <p className="text-sm text-gray-400 leading-relaxed mb-4">
                             Quality healthcare at your fingertips. Connect with top doctors anytime, anywhere.
