@@ -9,4 +9,4 @@ Disallow: /patient/
 Disallow: /doctor/
 Disallow: /payment/
 
-Sitemap: https://dranindadatta.vercel.app/sitemap.xml
+Sitemap: https://www.dranindadatta.com/sitemap.xml
