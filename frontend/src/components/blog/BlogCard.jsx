@@ -11,7 +11,7 @@ const BlogCard = ({ blog }) => {
                 <img
                     src={blog.thumbnail}
                     alt={blog.title}
-                    className="w-full h-44 object-cover group-hover:scale-105 transition duration-300"
+                    className="w-full h-44 object-contain group-hover:scale-105 transition duration-300"
                 />
             )}
             <div className="p-5">
