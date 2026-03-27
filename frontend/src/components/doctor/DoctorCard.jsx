@@ -59,12 +59,19 @@
 
 
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiStar, FiClock, FiMessageSquare, FiVideo } from 'react-icons/fi';
 import { formatBDT } from '../../utils/formatCurrency';
 
 const DoctorCard = ({ doctor }) => {
     const { user, specialization, experience, consultationFee, rating, totalReviews, bio } = doctor;
+    const navigate = useNavigate();
+
+    const handleMessageClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        navigate(`/chat/${user?._id}`);
+    };
 
     return (
         <Link
@@ -124,7 +131,10 @@ const DoctorCard = ({ doctor }) => {
                         <p className="text-xl font-bold text-gray-800">{formatBDT(consultationFee)}</p>
                     </div>
                     <div className="flex gap-2">
-                        <div className="w-9 h-9 bg-primary-50 text-primary-500 rounded-xl flex items-center justify-center group-hover:bg-primary-500 group-hover:text-white transition">
+                        <div
+                            onClick={handleMessageClick}
+                            className="w-9 h-9 bg-primary-50 text-primary-500 rounded-xl flex items-center justify-center group-hover:bg-primary-500 group-hover:text-white transition cursor-pointer"
+                        >
                             <FiMessageSquare size={16} />
                         </div>
                         <div className="flex items-center gap-1.5 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium px-4 py-2 rounded-xl transition">
