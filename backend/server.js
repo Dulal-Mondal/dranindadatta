@@ -236,6 +236,7 @@ const adminRoutes = require('./routes/admin.routes');
 const uploadRoutes = require('./routes/upload.routes');
 const blogRoutes = require('./routes/blog.routes');
 const videoRoutes = require('./routes/video.routes');
+const settingsRoutes = require('./routes/settings.routes');
 
 connectDB();
 
@@ -286,6 +287,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/videos', videoRoutes);
+app.use('/api/settings', settingsRoutes);
 
 app.get('/', (req, res) => res.send('Telemedicine API running'));
 
