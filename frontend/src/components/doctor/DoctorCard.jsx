@@ -64,18 +64,18 @@ import { FiStar, FiClock, FiMessageSquare, FiVideo } from 'react-icons/fi';
 import { formatBDT } from '../../utils/formatCurrency';
 
 const DoctorCard = ({ doctor }) => {
-    const { user, specialization, experience, consultationFee, rating, totalReviews, bio } = doctor;
+    const { _id, user, specialization, experience, consultationFee, rating, totalReviews, bio } = doctor;
     const navigate = useNavigate();
 
     const handleMessageClick = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        navigate(`/patient/chat/${user?._id}`);
+        navigate(`/patient/chat/${_id}`);
     };
 
     return (
         <Link
-            to={'/doctors/' + user?._id}
+            to={'/doctors/' + _id}
             className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 group overflow-hidden block"
         >
             {/* Top color bar */}
