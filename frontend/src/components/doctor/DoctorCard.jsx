@@ -70,7 +70,7 @@ const DoctorCard = ({ doctor }) => {
     const handleMessageClick = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        navigate(`/chat/${user?._id}`);
+        navigate(`/patient/chat/${user?._id}`);
     };
 
     return (
