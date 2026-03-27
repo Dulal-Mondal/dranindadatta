@@ -217,8 +217,8 @@ const Blogs = () => {
                     <button
                         onClick={() => handleCategory('')}
                         className={`px-4 py-2 rounded-full text-sm font-medium transition ${!category
-                                ? 'bg-primary-500 text-white'
-                                : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-400'
+                            ? 'bg-primary-500 text-white'
+                            : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-400'
                             }`}
                     >
                         All
@@ -228,8 +228,8 @@ const Blogs = () => {
                             key={cat.value}
                             onClick={() => handleCategory(cat.value)}
                             className={`px-4 py-2 rounded-full text-sm font-medium transition ${category === cat.value
-                                    ? 'bg-primary-500 text-white'
-                                    : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-400'
+                                ? 'bg-primary-500 text-white'
+                                : 'bg-white text-gray-600 border border-gray-200 hover:border-primary-400'
                                 }`}
                         >
                             {cat.label}
@@ -276,7 +276,7 @@ const Blogs = () => {
                                         <img
                                             src={blog.thumbnail}
                                             alt={blog.title}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                                            className="w-full h-full group-hover:scale-105 transition duration-300"
                                         />
                                     </div>
                                 ) : (
@@ -350,8 +350,8 @@ const Blogs = () => {
                                 key={p}
                                 onClick={() => setPage(p)}
                                 className={`w-10 h-10 rounded-lg text-sm font-medium transition ${page === p
-                                        ? 'bg-primary-500 text-white'
-                                        : 'border border-gray-200 hover:border-primary-400'
+                                    ? 'bg-primary-500 text-white'
+                                    : 'border border-gray-200 hover:border-primary-400'
                                     }`}
                             >
                                 {p}
