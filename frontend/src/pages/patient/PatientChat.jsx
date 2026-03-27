@@ -1,213 +1,3 @@
-// import { useState, useEffect, useRef } from 'react';
-// import { useParams } from 'react-router-dom';
-// import Navbar from '../../components/common/Navbar';
-// import { useAuth } from '../../context/AuthContext';
-// import { useSocket } from '../../context/SocketContext';
-// import { getMessages } from '../../services/messageService';
-// import { getDoctorById } from '../../services/doctorService';
-// import { formatTime } from '../../utils/formatDate';
-// import toast from 'react-hot-toast';
-// import { FiSend, FiPaperclip, FiArrowLeft } from 'react-icons/fi';
-// import { Link } from 'react-router-dom';
-
-// const PatientChat = () => {
-//     const { doctorId } = useParams();
-//     const { user } = useAuth();
-//     const { socket, isOnline } = useSocket();
-
-//     const [doctor, setDoctor] = useState(null);
-//     const [messages, setMessages] = useState([]);
-//     const [text, setText] = useState('');
-//     const [typing, setTyping] = useState(false);
-//     const [loading, setLoading] = useState(true);
-//     const messagesEndRef = useRef(null);
-//     const typingTimeoutRef = useRef(null);
-
-//     useEffect(() => {
-//         fetchDoctor();
-//         fetchMessages();
-//     }, [doctorId]);
-
-//     useEffect(() => {
-//         if (!socket) return;
-
-//         socket.on('receive_message', ({ message }) => {
-//             setMessages((prev) => [...prev, message]);
-//         });
-
-//         socket.on('message_sent', ({ message }) => {
-//             setMessages((prev) => [...prev, message]);
-//         });
-
-//         socket.on('user_typing', ({ senderId }) => {
-//             if (senderId === doctorId) setTyping(true);
-//         });
-
-//         socket.on('user_stop_typing', ({ senderId }) => {
-//             if (senderId === doctorId) setTyping(false);
-//         });
-
-//         return () => {
-//             socket.off('receive_message');
-//             socket.off('message_sent');
-//             socket.off('user_typing');
-//             socket.off('user_stop_typing');
-//         };
-//     }, [socket, doctorId]);
-
-//     useEffect(() => {
-//         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-//     }, [messages]);
-
-//     const fetchDoctor = async () => {
-//         try {
-//             const { data } = await getDoctorById(doctorId);
-//             setDoctor(data.doctor);
-//         } catch (err) {
-//             console.error(err);
-//         }
-//     };
-
-//     const fetchMessages = async () => {
-//         try {
-//             const { data } = await getMessages(doctorId);
-//             setMessages(data.messages || []);
-//         } catch (err) {
-//             console.error(err);
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     const handleSend = () => {
-//         if (!text.trim()) return;
-
-//         socket.emit('send_message', {
-//             senderId: user._id,
-//             receiverId: doctorId,
-//             text: text.trim(),
-//         });
-
-//         socket.emit('stop_typing', { senderId: user._id, receiverId: doctorId });
-//         setText('');
-//     };
-
-//     const handleTyping = (e) => {
-//         setText(e.target.value);
-//         socket.emit('typing', { senderId: user._id, receiverId: doctorId });
-//         clearTimeout(typingTimeoutRef.current);
-//         typingTimeoutRef.current = setTimeout(() => {
-//             socket.emit('stop_typing', { senderId: user._id, receiverId: doctorId });
-//         }, 1500);
-//     };
-
-//     const handleKeyDown = (e) => {
-//         if (e.key === 'Enter' && !e.shiftKey) {
-//             e.preventDefault();
-//             handleSend();
-//         }
-//     };
-
-//     return (
-//         <div className="min-h-screen bg-gray-50 flex flex-col">
-//             <Navbar />
-
-//             <div className="flex-1 max-w-3xl w-full mx-auto px-4 py-4 flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
-
-//                 <div className="bg-white rounded-t-xl border border-gray-100 p-4 flex items-center gap-3">
-//                     <Link to="/patient/appointments" className="text-gray-400 hover:text-gray-600">
-//                         <FiArrowLeft size={20} />
-//                     </Link>
-//                     <div className="relative">
-//                         <img
-//                             src={doctor?.user?.avatar || 'https://ui-avatars.com/api/?name=' + doctor?.user?.name + '&background=0ea5e9&color=fff&size=80'}
-//                             alt={doctor?.user?.name}
-//                             className="w-10 h-10 rounded-full object-cover"
-//                         />
-//                         {isOnline(doctorId) && (
-//                             <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white" />
-//                         )}
-//                     </div>
-//                     <div>
-//                         <p className="font-semibold text-gray-800 text-sm">Dr. {doctor?.user?.name}</p>
-//                         <p className="text-xs text-gray-500">{isOnline(doctorId) ? 'Online' : 'Offline'}</p>
-//                     </div>
-//                 </div>
-
-//                 <div className="flex-1 bg-white border-x border-gray-100 overflow-y-auto p-4 space-y-3">
-//                     {loading ? (
-//                         <div className="flex justify-center py-10">
-//                             <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
-//                         </div>
-//                     ) : messages.length === 0 ? (
-//                         <div className="text-center py-10 text-gray-400 text-sm">
-//                             No messages yet. Say hello! 👋
-//                         </div>
-//                     ) : (
-//                         messages.map((msg, i) => {
-//                             const isMe = msg.sender?._id === user._id || msg.sender === user._id;
-//                             return (
-//                                 <div key={i} className={'flex ' + (isMe ? 'justify-end' : 'justify-start')}>
-//                                     <div className={'max-w-xs lg:max-w-md ' + (isMe ? 'items-end' : 'items-start') + ' flex flex-col'}>
-//                                         {msg.fileUrl && msg.fileType === 'image' && (
-//                                             <img src={msg.fileUrl} alt="attachment" className="rounded-xl max-w-full mb-1" />
-//                                         )}
-//                                         {msg.fileUrl && msg.fileType === 'pdf' && (
-//                                             <a href={msg.fileUrl} target="_blank" rel="noreferrer" className="text-primary-500 underline text-sm">
-//                                                 📄 View PDF
-//                                             </a>
-//                                         )}
-//                                         {msg.text && (
-//                                             <div className={'px-4 py-2.5 rounded-2xl text-sm ' + (isMe ? 'bg-primary-500 text-white rounded-br-sm' : 'bg-gray-100 text-gray-800 rounded-bl-sm')}>
-//                                                 {msg.text}
-//                                             </div>
-//                                         )}
-//                                         <span className="text-xs text-gray-400 mt-1 px-1">
-//                                             {formatTime(msg.createdAt)}
-//                                         </span>
-//                                     </div>
-//                                 </div>
-//                             );
-//                         })
-//                     )}
-//                     {typing && (
-//                         <div className="flex justify-start">
-//                             <div className="bg-gray-100 rounded-2xl px-4 py-3 flex gap-1">
-//                                 <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-//                                 <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-//                                 <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-//                             </div>
-//                         </div>
-//                     )}
-//                     <div ref={messagesEndRef} />
-//                 </div>
-
-//                 <div className="bg-white rounded-b-xl border border-gray-100 border-t-0 p-3 flex items-center gap-2">
-//                     <input
-//                         type="text"
-//                         value={text}
-//                         onChange={handleTyping}
-//                         onKeyDown={handleKeyDown}
-//                         placeholder="Type a message..."
-//                         className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-//                     />
-//                     <button
-//                         onClick={handleSend}
-//                         disabled={!text.trim()}
-//                         className="w-10 h-10 bg-primary-500 hover:bg-primary-600 disabled:opacity-50 text-white rounded-xl flex items-center justify-center transition"
-//                     >
-//                         <FiSend size={16} />
-//                     </button>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default PatientChat;
-
-
-
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
@@ -225,16 +15,14 @@ const PatientChat = () => {
     const { socket, isOnline } = useSocket();
 
     const [doctor, setDoctor] = useState(null);
+    const [doctorUserId, setDoctorUserId] = useState(null); // ✅ নতুন
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
     const [typing, setTyping] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    // edit
     const [editingId, setEditingId] = useState(null);
     const [editText, setEditText] = useState('');
-
-    // reply
     const [replyTo, setReplyTo] = useState(null);
 
     const messagesEndRef = useRef(null);
@@ -242,64 +30,67 @@ const PatientChat = () => {
     const editInputRef = useRef(null);
     const inputRef = useRef(null);
 
+    // ✅ doctor আগে fetch করো, তারপর doctor.user._id দিয়ে messages fetch করো
     useEffect(() => {
-        fetchDoctor();
-        fetchMessages();
+        const fetchDoctorAndMessages = async () => {
+            try {
+                const { data } = await getDoctorById(doctorId);
+                const fetchedDoctor = data.doctor;
+                setDoctor(fetchedDoctor);
+
+                const userId = fetchedDoctor.user._id;
+                setDoctorUserId(userId);
+
+                const msgRes = await getMessages(userId);
+                setMessages(msgRes.data.messages || []);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDoctorAndMessages();
     }, [doctorId]);
 
     useEffect(() => {
         if (!socket) return;
         socket.on('receive_message', ({ message }) => setMessages((prev) => [...prev, message]));
         socket.on('message_sent', ({ message }) => setMessages((prev) => [...prev, message]));
-        socket.on('user_typing', ({ senderId }) => { if (senderId === doctorId) setTyping(true); });
-        socket.on('user_stop_typing', ({ senderId }) => { if (senderId === doctorId) setTyping(false); });
+        socket.on('user_typing', ({ senderId }) => { if (senderId === doctorUserId) setTyping(true); });
+        socket.on('user_stop_typing', ({ senderId }) => { if (senderId === doctorUserId) setTyping(false); });
         return () => {
             socket.off('receive_message');
             socket.off('message_sent');
             socket.off('user_typing');
             socket.off('user_stop_typing');
         };
-    }, [socket, doctorId]);
+    }, [socket, doctorUserId]);
 
     useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
     useEffect(() => { if (editingId && editInputRef.current) editInputRef.current.focus(); }, [editingId]);
     useEffect(() => { if (replyTo && inputRef.current) inputRef.current.focus(); }, [replyTo]);
 
-    const fetchDoctor = async () => {
-        try {
-            const { data } = await getDoctorById(doctorId);
-            setDoctor(data.doctor);
-        } catch (err) { console.error(err); }
-    };
-
-    const fetchMessages = async () => {
-        try {
-            const { data } = await getMessages(doctorId);
-            setMessages(data.messages || []);
-        } catch (err) { console.error(err); }
-        finally { setLoading(false); }
-    };
-
     const handleSend = () => {
-        if (!text.trim() || !socket) return;
+        if (!text.trim() || !socket || !doctorUserId) return;
         socket.emit('send_message', {
             senderId: user._id,
-            receiverId: doctorId,
+            receiverId: doctorUserId, // ✅ doctor.user._id পাঠাচ্ছি
             text: text.trim(),
             replyTo: replyTo?._id || null,
         });
-        socket.emit('stop_typing', { senderId: user._id, receiverId: doctorId });
+        socket.emit('stop_typing', { senderId: user._id, receiverId: doctorUserId });
         setText('');
         setReplyTo(null);
     };
 
     const handleTyping = (e) => {
         setText(e.target.value);
-        if (!socket) return;
-        socket.emit('typing', { senderId: user._id, receiverId: doctorId });
+        if (!socket || !doctorUserId) return;
+        socket.emit('typing', { senderId: user._id, receiverId: doctorUserId });
         clearTimeout(typingTimeoutRef.current);
         typingTimeoutRef.current = setTimeout(() => {
-            socket.emit('stop_typing', { senderId: user._id, receiverId: doctorId });
+            socket.emit('stop_typing', { senderId: user._id, receiverId: doctorUserId });
         }, 1500);
     };
 
@@ -349,11 +140,11 @@ const PatientChat = () => {
                             className="w-10 h-10 rounded-full object-cover"
                             alt="doctor"
                         />
-                        {isOnline(doctorId) && <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white" />}
+                        {isOnline(doctorUserId) && <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white" />}
                     </div>
                     <div>
                         <p className="font-semibold text-gray-800 text-sm">Dr. {doctor?.user?.name}</p>
-                        <p className="text-xs text-gray-500">{isOnline(doctorId) ? 'Online' : 'Offline'}</p>
+                        <p className="text-xs text-gray-500">{isOnline(doctorUserId) ? 'Online' : 'Offline'}</p>
                     </div>
                 </div>
 
@@ -375,7 +166,6 @@ const PatientChat = () => {
                                 <div key={i} className={'flex ' + (isMe ? 'justify-end' : 'justify-start')}>
                                     <div className={'group flex flex-col max-w-xs lg:max-w-md ' + (isMe ? 'items-end' : 'items-start')}>
 
-                                        {/* Reply preview inside message */}
                                         {replied && (
                                             <div className={'mb-1 px-3 py-1.5 rounded-xl border-l-4 text-xs max-w-full ' + (isMe ? 'bg-primary-100 border-primary-300 text-primary-700' : 'bg-gray-100 border-gray-300 text-gray-600')}>
                                                 <p className="font-semibold mb-0.5">
@@ -385,7 +175,6 @@ const PatientChat = () => {
                                             </div>
                                         )}
 
-                                        {/* Edit mode */}
                                         {isEditing ? (
                                             <div className="flex items-center gap-2 bg-white border border-primary-300 rounded-2xl px-3 py-2 shadow-sm">
                                                 <input
@@ -403,7 +192,6 @@ const PatientChat = () => {
                                             </div>
                                         ) : (
                                             <div className="relative flex items-center gap-1">
-                                                {/* Action buttons */}
                                                 {!isMe && (
                                                     <button
                                                         onClick={() => handleReply(msg)}
@@ -420,16 +208,10 @@ const PatientChat = () => {
 
                                                 {isMe && (
                                                     <div className="opacity-0 group-hover:opacity-100 flex gap-1">
-                                                        <button
-                                                            onClick={() => handleReply(msg)}
-                                                            className="w-7 h-7 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition"
-                                                        >
+                                                        <button onClick={() => handleReply(msg)} className="w-7 h-7 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition">
                                                             <FiCornerUpLeft size={13} className="text-gray-500" />
                                                         </button>
-                                                        <button
-                                                            onClick={() => startEdit(msg)}
-                                                            className="w-7 h-7 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition"
-                                                        >
+                                                        <button onClick={() => startEdit(msg)} className="w-7 h-7 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition">
                                                             <FiEdit2 size={13} className="text-gray-500" />
                                                         </button>
                                                     </div>
