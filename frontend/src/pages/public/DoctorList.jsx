@@ -166,8 +166,7 @@ import Loader from '../../components/common/Loader';
 import DoctorCard from '../../components/doctor/DoctorCard';
 import { getAllDoctors } from '../../services/doctorService';
 import { SPECIALIZATIONS } from '../../utils/constants';
-import { FiSearch, FiFilter } from 'react-icons/fi';
-import { motion } from "framer-motion";
+
 import HeroSection from '../../components/common/HeroSection';
 
 

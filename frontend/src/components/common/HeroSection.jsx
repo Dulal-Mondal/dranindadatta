@@ -32,9 +32,23 @@ const HeroSection = ({ search, setSearch, specialization, setSpecialization, set
     }, [index]);
 
     return (
-        <div className="relative bg-gradient-to-r from-primary-500 via-blue-500 to-blue-700 py-24 px-4 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600 py-24 px-4 overflow-hidden">
 
-            {/* 🔥 Animated Gradient Overlay */}
+            {/* 🏥 Medical Image Background */}
+            <div className="absolute inset-0">
+                <img
+                    src="https://images.unsplash.com/photo-1579684385127-1ef15d508118"
+                    alt="medical"
+                    className="w-full h-full object-cover opacity-10 blur-sm"
+                />
+            </div>
+
+            {/* ➕ Medical Pattern */}
+            <div className="absolute inset-0 opacity-10">
+                <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/crosses.png')]"></div>
+            </div>
+
+            {/* 🔥 Overlay */}
             <div className="absolute inset-0 bg-black/10"></div>
 
             {/* 🌌 Floating Blobs */}
@@ -50,10 +64,19 @@ const HeroSection = ({ search, setSearch, specialization, setSpecialization, set
                 className="absolute w-96 h-96 bg-blue-300/20 rounded-full blur-3xl bottom-0 right-0"
             />
 
-            {/* ✨ Fake Particles */}
+            {/* ✨ Particles */}
             <div className="absolute inset-0 opacity-20">
                 <div className="w-full h-full bg-[radial-gradient(circle,white_1px,transparent_1px)] [background-size:30px_30px] animate-pulse"></div>
             </div>
+
+            {/* ❤️ Heartbeat Icon */}
+            <motion.div
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="absolute top-10 right-10 text-white/20 text-6xl"
+            >
+                ❤️
+            </motion.div>
 
             {/* ✨ Content */}
             <motion.div
