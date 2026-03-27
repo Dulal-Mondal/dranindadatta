@@ -2,10 +2,21 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FiSearch, FiFilter } from "react-icons/fi";
 
-const HeroSection = ({ search, setSearch, specialization, setSpecialization, setPage, SPECIALIZATIONS }) => {
+const HeroSection = ({
+    search,
+    setSearch,
+    specialization,
+    setSpecialization,
+    setPage,
+    SPECIALIZATIONS,
+}) => {
+    const texts = [
+        "Search doctor...",
+        "Cardiologist...",
+        "Dermatologist...",
+        "Neurologist...",
+    ];
 
-    // ✨ Typing Effect
-    const texts = ["Search doctor...", "Cardiologist...", "Dermatologist...", "Neurologist..."];
     const [placeholder, setPlaceholder] = useState("");
     const [index, setIndex] = useState(0);
     const [subIndex, setSubIndex] = useState(0);
@@ -15,14 +26,14 @@ const HeroSection = ({ search, setSearch, specialization, setSpecialization, set
             setTimeout(() => {
                 setSubIndex(0);
                 setIndex((prev) => (prev + 1) % texts.length);
-            }, 1000);
+            }, 1200);
             return;
         }
 
         const timeout = setTimeout(() => {
             setPlaceholder((prev) => prev + texts[index][subIndex]);
             setSubIndex((prev) => prev + 1);
-        }, 80);
+        }, 70);
 
         return () => clearTimeout(timeout);
     }, [subIndex, index]);
@@ -32,108 +43,90 @@ const HeroSection = ({ search, setSearch, specialization, setSpecialization, set
     }, [index]);
 
     return (
-        <div className="relative bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600 py-24 px-4 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-700 py-16 px-4 overflow-hidden">
 
-            {/* 🏥 Medical Image Background */}
+            {/* 🏥 Background Medical Image */}
             <div className="absolute inset-0">
                 <img
                     src="https://images.unsplash.com/photo-1579684385127-1ef15d508118"
-                    alt="medical"
                     className="w-full h-full object-cover opacity-10 blur-sm"
+                    alt="medical"
                 />
             </div>
 
-            {/* ➕ Medical Pattern */}
-            <div className="absolute inset-0 opacity-10">
-                <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/crosses.png')]"></div>
+            {/* 🧰 Doctor Tools Background */}
+            <div className="absolute inset-0">
+                <img
+                    src="https://images.unsplash.com/photo-1580281657527-47f249e8f8c2"
+                    className="w-full h-full object-cover opacity-10 mix-blend-overlay"
+                    alt="tools"
+                />
             </div>
 
-            {/* 🔥 Overlay */}
-            <div className="absolute inset-0 bg-black/10"></div>
-
-            {/* 🌌 Floating Blobs */}
+            {/* 🔵 Soft Glow Shapes */}
             <motion.div
-                animate={{ x: [0, 120, 0], y: [0, -80, 0] }}
-                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute w-80 h-80 bg-white/20 rounded-full blur-3xl top-10 left-10"
+                animate={{ x: [0, 80, 0], y: [0, -60, 0] }}
+                transition={{ duration: 12, repeat: Infinity }}
+                className="absolute w-72 h-72 bg-white/20 rounded-full blur-3xl top-10 left-10"
             />
 
             <motion.div
-                animate={{ x: [0, -100, 0], y: [0, 100, 0] }}
-                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+                animate={{ x: [0, -80, 0], y: [0, 80, 0] }}
+                transition={{ duration: 14, repeat: Infinity }}
                 className="absolute w-96 h-96 bg-blue-300/20 rounded-full blur-3xl bottom-0 right-0"
             />
 
-            {/* ✨ Particles */}
-            <div className="absolute inset-0 opacity-20">
-                <div className="w-full h-full bg-[radial-gradient(circle,white_1px,transparent_1px)] [background-size:30px_30px] animate-pulse"></div>
-            </div>
-
-            {/* ❤️ Heartbeat Icon */}
+            {/* 🌟 Content */}
             <motion.div
-                animate={{ scale: [1, 1.3, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="absolute top-10 right-10 text-white/20 text-6xl"
-            >
-                ❤️
-            </motion.div>
-
-            {/* ✨ Content */}
-            <motion.div
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1 }}
-                className="max-w-7xl mx-auto text-center text-white relative z-10"
+                className="max-w-6xl mx-auto text-center text-white relative z-10"
             >
-
-                {/* Title */}
-                <motion.h1
-                    initial={{ opacity: 0, y: -30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="text-4xl md:text-6xl font-bold mb-4"
-                >
+                <h1 className="text-4xl md:text-5xl font-bold mb-3">
                     Find Your Doctor
-                </motion.h1>
+                </h1>
 
-                {/* Subtitle */}
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="text-blue-100 mb-10 text-lg"
-                >
-                    Choose from experienced specialists
-                </motion.p>
+                <p className="text-blue-100 mb-8">
+                    Book appointments with trusted specialists
+                </p>
 
-                {/* 🔍 Search */}
+                {/* 🔍 Glass Search Box */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.7 }}
-                    className="max-w-3xl mx-auto flex flex-col sm:flex-row gap-4"
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    className="backdrop-blur-lg bg-white/20 border border-white/30 rounded-2xl p-4 flex flex-col sm:flex-row gap-3 shadow-2xl"
                 >
+                    {/* Search Input */}
                     <div className="flex-1 relative">
-                        <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                        <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-200" />
                         <input
                             type="text"
                             placeholder={placeholder}
                             value={search}
-                            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                            className="w-full pl-11 pr-4 py-4 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-white text-sm shadow-2xl"
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                                setPage(1);
+                            }}
+                            className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/90 text-gray-800 focus:outline-none"
                         />
                     </div>
 
+                    {/* Filter */}
                     <div className="relative">
-                        <FiFilter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                        <FiFilter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                         <select
                             value={specialization}
-                            onChange={(e) => { setSpecialization(e.target.value); setPage(1); }}
-                            className="pl-10 pr-6 py-4 rounded-xl text-gray-800 focus:outline-none bg-white text-sm min-w-[200px] shadow-2xl"
+                            onChange={(e) => {
+                                setSpecialization(e.target.value);
+                                setPage(1);
+                            }}
+                            className="pl-9 pr-4 py-3 rounded-xl bg-white/90 text-gray-800 focus:outline-none min-w-[180px]"
                         >
                             <option value="">All Specializations</option>
                             {SPECIALIZATIONS.map((s) => (
-                                <option key={s} value={s}>{s}</option>
+                                <option key={s} value={s}>
+                                    {s}
+                                </option>
                             ))}
                         </select>
                     </div>
