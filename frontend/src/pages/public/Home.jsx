@@ -564,8 +564,11 @@ const Home = () => {
         <div className="min-h-screen bg-gray-50">
             <Navbar />
 
-            {/* ✅ Notice Scrollbar — Navbar এর নিচে, Slider এর উপরে */}
-            <NoticeBar />
+
+            <div className='sticky top-0'>
+                {/* ✅ Notice Scrollbar — Navbar এর নিচে, Slider এর উপরে */}
+                <NoticeBar />
+            </div>
 
             {/* Hero Slider */}
             <HeroSlider sliders={sliders} />
