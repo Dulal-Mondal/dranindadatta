@@ -3,7 +3,7 @@ import { FiArrowRight } from 'react-icons/fi';
 
 const CTASection = () => {
     return (
-        <section className="relative overflow-hidden bg-gradient-to-r from-primary-600 via-primary-500 to-blue-600 py-20">
+        <section className="relative overflow-hidden bg-gradient-to-r from-primary-600 via-primary-500 to-blue-600 py-15">
 
             {/* ── Animated medical background VFX ── */}
             <div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
