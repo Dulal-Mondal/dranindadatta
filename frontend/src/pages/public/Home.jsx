@@ -565,13 +565,17 @@ const Home = () => {
             <Navbar />
 
 
-            <div className='fixed top-[20px]'>
-                {/*Notice Scrollbar — Navbar এর নিচে, Slider এর উপরে */}
+
+            {/*Notice Scrollbar — Navbar এর নিচে, Slider এর উপরে */}
+
+            <div className='fixed top-16 left-0 right-0 w-full z-40'>
                 <NoticeBar />
             </div>
 
             {/* Hero Slider */}
-            <HeroSlider sliders={sliders} />
+            <div className="mt-8"> {/* NoticeBar-এর height অনুযায়ী adjust করুন */}
+                <HeroSlider sliders={sliders} />
+            </div>
 
             {/* Stats */}
             <div className="bg-white border-b border-gray-100">
