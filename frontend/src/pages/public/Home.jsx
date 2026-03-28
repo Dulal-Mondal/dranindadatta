@@ -378,6 +378,7 @@ import {
     FiVideo, FiMessageSquare, FiFileText, FiShield,
 } from 'react-icons/fi';
 import usePageTitle from '../../hooks/usePageTitle';
+import CTASection from '../../components/common/CTASection';
 
 // ── Hero Slider ──────────────────────────────────────────
 const HeroSlider = ({ sliders }) => {
@@ -698,7 +699,7 @@ const Home = () => {
             )}
 
             {/* CTA */}
-            <section className="bg-gradient-to-r from-primary-500 to-blue-600 py-16">
+            {/* <section className="bg-gradient-to-r from-primary-500 to-blue-600 py-16">
                 <div className="max-w-3xl mx-auto px-4 text-center text-white">
                     <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
                     <p className="text-blue-100 mb-8">
@@ -719,8 +720,9 @@ const Home = () => {
                         </Link>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
+            <CTASection></CTASection>
             <Footer />
         </div>
     );
