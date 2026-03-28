@@ -565,8 +565,8 @@ const Home = () => {
             <Navbar />
 
 
-            <div className='sticky top-0'>
-                {/* ✅ Notice Scrollbar — Navbar এর নিচে, Slider এর উপরে */}
+            <div className='fixed top-0'>
+                {/*Notice Scrollbar — Navbar এর নিচে, Slider এর উপরে */}
                 <NoticeBar />
             </div>
 
