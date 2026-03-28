@@ -40,6 +40,7 @@ import ManageSlider from '../pages/admin/ManageSlider';
 import ManageBlogs from '../pages/admin/ManageBlogs';
 import ManageVideos from '../pages/admin/ManageVideos';
 import AdminSettings from '../pages/admin/AdminSettings'; // ✅ নতুন
+import NoticeManager from '../pages/admin/NoticeManager';
 
 const Loader = () => (
     <div className="flex items-center justify-center h-screen">
