@@ -92,12 +92,14 @@ const AppRoutes = () => (
         <Route path="/admin/dashboard" element={<RoleRoute roles={['admin']}><AdminDashboard /></RoleRoute>} />
         <Route path="/admin/doctors" element={<RoleRoute roles={['admin']}><ManageDoctors /></RoleRoute>} />
         <Route path="/admin/patients" element={<RoleRoute roles={['admin']}><ManagePatients /></RoleRoute>} />
+
         <Route path="/admin/slider" element={<RoleRoute roles={['admin']}><ManageSlider /></RoleRoute>} />
         <Route path="/admin/blogs" element={<RoleRoute roles={['admin']}><ManageBlogs /></RoleRoute>} />
         <Route path="/admin/videos" element={<RoleRoute roles={['admin']}><ManageVideos /></RoleRoute>} />
         <Route path="/admin/settings" element={<RoleRoute roles={['admin']}><AdminSettings /></RoleRoute>} /> {/* ✅ নতুন */}
 
         <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/admin/notices" element={<NoticeManager />} />
     </Routes>
 );
 
