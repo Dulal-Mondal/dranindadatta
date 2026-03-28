@@ -255,13 +255,13 @@ const Navbar = () => {
 
     const navLinks = [
         { label: 'Home', to: '/' },
-        { label: 'Doctors', to: '/doctors' },
-        { label: 'Blogs', to: '/blogs' },
-        { label: 'Videos', to: '/videos' },
         { label: 'About', to: '/' },
-        { label: 'Contact Us', to: '/' },
+        { label: 'Doctors', to: '/doctors' },
         { label: 'Sevices', to: '/' },
         { label: 'Products', to: '/' },
+        { label: 'Videos', to: '/videos' },
+        { label: 'Blogs', to: '/blogs' },
+        { label: 'Contact Us', to: '/' },
 
     ];
 
