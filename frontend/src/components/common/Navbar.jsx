@@ -258,6 +258,8 @@ const Navbar = () => {
         { label: 'Doctors', to: '/doctors' },
         { label: 'Blogs', to: '/blogs' },
         { label: 'Videos', to: '/videos' },
+        { label: 'About', to: '/videos' },
+        { label: 'Contruct', to: '/videos' },
         { label: 'Sevices', to: '/' },
     ];
 
