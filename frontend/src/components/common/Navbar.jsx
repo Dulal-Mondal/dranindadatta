@@ -258,9 +258,11 @@ const Navbar = () => {
         { label: 'Doctors', to: '/doctors' },
         { label: 'Blogs', to: '/blogs' },
         { label: 'Videos', to: '/videos' },
-        { label: 'About', to: '/videos' },
-        { label: 'Contruct', to: '/videos' },
+        { label: 'About', to: '/' },
+        { label: 'Contact Us', to: '/' },
         { label: 'Sevices', to: '/' },
+        { label: 'Products', to: '/' },
+
     ];
 
     const isActive = (path) => location.pathname === path;
